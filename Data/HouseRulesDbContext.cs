@@ -64,6 +64,7 @@ public class HouseRulesDbContext : IdentityDbContext<IdentityUser>
         FirstName = "Admina",
         LastName = "Strator",
         Address = "101 Main Street",
+        Email = "admina@strator.comx",
     },
     new UserProfile
     {
@@ -72,6 +73,7 @@ public class HouseRulesDbContext : IdentityDbContext<IdentityUser>
         FirstName = "Jane",
         LastName = "Mechanic",
         Address = "202 Bike Lane",
+        Email = "jane@biancasbikes.comx",
     },
     new UserProfile
     {
@@ -80,6 +82,81 @@ public class HouseRulesDbContext : IdentityDbContext<IdentityUser>
         FirstName = "Bob",
         LastName = "Wrench",
         Address = "303 Gear Street",
+        Email = "bob@biancasbikes.comx",
     }
 });
+
+modelBuilder.Entity<Chore>().HasData(new Chore[]
+{
+    new Chore
+    {
+        Id = 1,
+        Name="Mow The Lawn",
+        Difficulty= 3,
+        ChoreFrequencyDays= 14
+    },
+    new Chore
+    {
+        Id= 2,
+        Name="Wash Dishes",
+        Difficulty=2,
+        ChoreFrequencyDays=2
+    },
+    new Chore
+    {
+        Id = 3,
+        Name ="Wash the Car",
+        Difficulty=3,
+        ChoreFrequencyDays= 30
+    },
+    new Chore
+    {
+        Id= 4,
+        Name="Walk the Dog",
+        Difficulty=1,
+        ChoreFrequencyDays=1
+    },
+    new Chore
+    {
+        Id = 5,
+        Name ="Clean Room",
+        Difficulty = 5,
+        ChoreFrequencyDays = 12
+    }
+});
+
+modelBuilder.Entity<ChoreAssignmment>().HasData(new ChoreAssignmment[]
+{
+    new ChoreAssignmment
+    {
+        Id = 1,
+        UserProfileId = 1,
+        ChoreId = 1
+    },
+    new ChoreAssignmment
+    {
+        Id = 2,
+        UserProfileId = 1,
+        ChoreId= 4
+    }
+});
+
+modelBuilder.Entity<ChoreCompletion>().HasData(new ChoreCompletion[]
+{
+   new ChoreCompletion
+    { 
+        Id=1,
+        UserProfileId = 1,
+        ChoreId = 1,
+        CompletedOn = new DateTime(2026,9,23)
+    },
+   new ChoreCompletion
+   {
+       Id =2,
+       UserProfileId= 1,
+       ChoreId = 3,
+       CompletedOn = new DateTime(2026,4,19)
+   }
+});
+
 }}  
