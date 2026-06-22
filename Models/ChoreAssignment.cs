@@ -6,5 +6,5 @@ public class ChoreAssignmment
     public int UserProfileId { get; set; }
     public int ChoreId { get; set; } 
 
-    public List<Chore> Chore {get; set; }
+    public Chore Chore {get; set; }
 }
