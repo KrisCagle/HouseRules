@@ -9,9 +9,9 @@ public class UserProfile
     public string LastName { get; set; }
     public string Address { get; set; }
     public string Email { get; set; }
-
     public string IdentityUserId { get; set; }
-
     public IdentityUser IdentityUser { get; set; }
 
+    public List<ChoreAssignmment> ChoreAssignmments { get; set; }
+    public List<ChoreCompletion> ChoreCompletions { get; set; }
 }

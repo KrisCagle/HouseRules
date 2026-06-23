@@ -1,10 +1,10 @@
 namespace HouseRules.Models;
 
-public class ChoreAssignmment
+public class ChoreAssignment
 {
     public int Id { get; set; }
     public int UserProfileId { get; set; }
     public int ChoreId { get; set; } 
 
-    public List<Chore> Chore {get; set; }
+    public Chore Chore {get; set; }
 }
