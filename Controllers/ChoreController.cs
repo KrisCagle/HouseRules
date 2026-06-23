@@ -72,6 +72,20 @@ public IActionResult GetByIdComplete(int id, [FromQuery] int userId)
         return NoContent();
     }
 
+[HttpPost]
+[Authorize]
+public IActionResult NewChore(Chore newChore)
 
+    {
+        Chore chore = new Chore
+        {
+            Name = newChore.Name,
+            Difficulty = newChore.Difficulty,
+            ChoreFrequencyDays = newChore.ChoreFrequencyDays
+        };
+        _dbContext.Chores.Add(chore);
+        _dbContext.SaveChanges();
+        return NoContent();
+}
 
 }
