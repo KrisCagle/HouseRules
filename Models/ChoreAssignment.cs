@@ -1,6 +1,6 @@
 namespace HouseRules.Models;
 
-public class ChoreAssignmment
+public class ChoreAssignment
 {
     public int Id { get; set; }
     public int UserProfileId { get; set; }

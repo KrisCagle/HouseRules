@@ -39,7 +39,7 @@ public IActionResult GetById(int id)
     {
         Chore chore = _dbContext
         .Chores
-        .Include(b => b.ChoreAssignmments)
+        .Include(b => b.ChoreAssignments)
         .Include(b => b.ChoreCompletions )
         .SingleOrDefault(b => b.Id == id);
         
@@ -108,5 +108,53 @@ public IActionResult UpdateChore(int id, Chore updatedChore)
         return NoContent();
     }
 
+[HttpDelete("{id}")]
+[Authorize]
+public IActionResult DeleteChore(int id)
+    {
+        Chore chore = _dbContext.Chores
+        .SingleOrDefault(c => c.Id == id);
+        if (chore == null)
+        {
+            return NotFound();
+        }
+        _dbContext.Chores.Remove(chore);
+        _dbContext.SaveChanges();
+        return NoContent();
+    }
 
+[HttpPost("{id}/assign")]
+[Authorize]
+ public IActionResult AssignChore(int id, [FromQuery] int userId)
+    {
+        Chore chore = _dbContext.Chores.SingleOrDefault(c => c.Id == id);
+        if (chore == null)
+        {
+            return NotFound();
+        }
+        ChoreAssignment assignment = new ChoreAssignment
+        {
+            UserProfileId = userId,
+            ChoreId = id
+        };
+        _dbContext.ChoreAssignments.Add(assignment);
+        _dbContext.SaveChanges();
+        return NoContent();
+    }
+
+[HttpPost("{id}/unassign")]
+[Authorize]
+
+public IActionResult UnassignChore(int id, [FromQuery] int userId)
+    {
+       ChoreAssignment assignment = _dbContext.ChoreAssignmments
+       .SingleOrDefault(ca => ca.ChoreId == id && ca.UserProfileId == userId);
+       if (assignment == null)
+        {
+            return NotFound();
+        } 
+    _dbContext.ChoreAssignmments.Remove(assignment);
+    _dbContext.SaveChanges();
+    return NoContent();
+    }
 }
