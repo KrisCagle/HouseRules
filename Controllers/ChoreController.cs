@@ -52,4 +52,26 @@ public IActionResult GetById(int id)
         
     }
 
+[HttpPost("{id}/complete")]
+[Authorize]
+public IActionResult GetByIdComplete(int id, [FromQuery] int userId)
+    {
+        Chore chore = _dbContext.Chores.SingleOrDefault( c => c.Id == id);
+        if (chore == null)
+        {
+            return NotFound();
+        }
+        var completion = new ChoreCompletion
+        {
+            UserProfileId = id,
+            ChoreId = id,
+            CompletedOn = DateTime.UtcNow
+        };
+        _dbContext.ChoreCompletions.Add(completion);
+        _dbContext.SaveChanges();
+        return NoContent();
+    }
+
+
+
 }
