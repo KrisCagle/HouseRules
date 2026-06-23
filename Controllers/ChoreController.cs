@@ -33,6 +33,23 @@ public IActionResult Get()
     return Ok(dtos);
 }
 
+[HttpGet("{id}")]
+[Authorize]
+public IActionResult GetById(int id)
+    {
+        Chore chore = _dbContext
+        .Chores
+        .Include(b => b.ChoreAssignmments)
+        .Include(b => b.ChoreCompletions )
+        .SingleOrDefault(b => b.Id == id);
+        
 
+        if (chore == null)
+        {
+            return NotFound();
+        }
+        return Ok(chore);
+        
+    }
 
 }
