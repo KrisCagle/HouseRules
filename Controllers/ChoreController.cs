@@ -88,4 +88,25 @@ public IActionResult NewChore(Chore newChore)
         return NoContent();
 }
 
+
+
+
+[HttpPut("{id}")]
+[Authorize]
+public IActionResult UpdateChore(int id, Chore updatedChore)
+    {
+        Chore chore = _dbContext.Chores
+        .SingleOrDefault(c => c.Id == id);
+        if (chore == null)
+        {
+            return NotFound();
+        }
+        chore.Name = updatedChore.Name;
+        chore.Difficulty = updatedChore.Difficulty;
+        chore.ChoreFrequencyDays = updatedChore.ChoreFrequencyDays;
+        _dbContext.SaveChanges();
+        return NoContent();
+    }
+
+
 }
