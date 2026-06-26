@@ -9,5 +9,5 @@ public class Chore
     public int Difficulty { get; set; }
     public int ChoreFrequencyDays { get; set; }
     public List<ChoreCompletion> ChoreCompletions { get; set; }
-public List<ChoreAssignmment> ChoreAssignmments { get; set; }
+public List<ChoreAssignment> ChoreAssignments { get; set; }
 }

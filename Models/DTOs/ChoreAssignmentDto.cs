@@ -1,6 +1,6 @@
 namespace HouseRules.Models.DTOs;
 
-public class ChoreAssignmmentDto
+public class ChoreAssignmentDto
 {
     public int Id { get; set; }
     public int UserProfileId { get; set; }

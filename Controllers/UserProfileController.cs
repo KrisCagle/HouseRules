@@ -43,7 +43,7 @@ public class UserProfileController : ControllerBase
         UserProfile userProfile = _dbContext
             .UserProfiles
             .Include(up => up.IdentityUser)
-            .Include(up => up.ChoreAssignmments)
+            .Include(up => up.ChoreAssignments)
                 .ThenInclude(ca => ca.Chore)
             .Include(up => up.ChoreCompletions)
                 .ThenInclude(cc => cc.Chore)

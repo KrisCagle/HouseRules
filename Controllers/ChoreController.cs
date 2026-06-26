@@ -23,7 +23,7 @@ public class ChoreController : ControllerBase
 
 
 [HttpGet]
-[Authorize]
+// [Authorize]
 public IActionResult Get()
 {
     List<Chore> chores = _dbContext
@@ -147,13 +147,13 @@ public IActionResult DeleteChore(int id)
 
 public IActionResult UnassignChore(int id, [FromQuery] int userId)
     {
-       ChoreAssignment assignment = _dbContext.ChoreAssignmments
+       ChoreAssignment assignment = _dbContext.ChoreAssignments
        .SingleOrDefault(ca => ca.ChoreId == id && ca.UserProfileId == userId);
        if (assignment == null)
         {
             return NotFound();
         } 
-    _dbContext.ChoreAssignmments.Remove(assignment);
+    _dbContext.ChoreAssignments.Remove(assignment);
     _dbContext.SaveChanges();
     return NoContent();
     }

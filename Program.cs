@@ -7,7 +7,16 @@ using HouseRules.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ClientPermissions", policy =>
+    {
+        policy.AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials()
+            .WithOrigins("http://localhost:5173");
+    });
+});
 builder.Services.AddControllers().AddJsonOptions(opts =>
 {
     opts.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -58,7 +67,7 @@ builder.Services.AddNpgsql<HouseRulesDbContext>(builder.Configuration["HouseRule
 
 
 var app = builder.Build();
-
+app.UseCors("ClientPermissions");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
