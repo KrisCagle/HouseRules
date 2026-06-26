@@ -9,7 +9,7 @@ public class HouseRulesDbContext : IdentityDbContext<IdentityUser>
     private readonly IConfiguration _configuration;
     public DbSet<UserProfile> UserProfiles { get; set; }
     public DbSet<Chore> Chores { get; set; }
-    public DbSet<ChoreAssignmment> ChoreAssignmments { get; set; }
+    public DbSet<ChoreAssignment> ChoreAssignments { get; set; }
     public DbSet<ChoreCompletion> ChoreCompletions { get; set; }
 
     public HouseRulesDbContext(DbContextOptions<HouseRulesDbContext> context, IConfiguration config) : base(context)
@@ -128,15 +128,15 @@ modelBuilder.Entity<Chore>().HasData(new Chore[]
     }
 });
 
-modelBuilder.Entity<ChoreAssignmment>().HasData(new ChoreAssignmment[]
+modelBuilder.Entity<ChoreAssignment>().HasData(new ChoreAssignment[]
 {
-    new ChoreAssignmment
+    new ChoreAssignment
     {
         Id = 1,
         UserProfileId = 1,
         ChoreId = 1
     },
-    new ChoreAssignmment
+    new ChoreAssignment
     {
         Id = 2,
         UserProfileId = 1,

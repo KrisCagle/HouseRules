@@ -11,7 +11,7 @@ public class AutoMapperProfile : Profile
     {
         CreateMap<Chore, ChoreDto>();
 
-        CreateMap<ChoreAssignmment, ChoreAssignmmentDto>();
+        CreateMap<ChoreAssignment, ChoreAssignmentDto>();
 
         CreateMap<ChoreCompletion, ChoreCompletionDto>();
 
