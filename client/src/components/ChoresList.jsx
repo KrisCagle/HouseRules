@@ -32,6 +32,10 @@ export default function ChoresList({ loggedInUser }) {
     const handleComplete = (choreId) => {
         completeChore(choreId, loggedInUser.id).then(() => {
             alert("Chore completed!");
+            // Re-fetch chores to update IsOverdue status
+            getAllChores().then((data) => {
+                setChores(data);
+            });
         }).catch((err) => {
             console.error("Error completing chore:", err);
         });
@@ -49,9 +53,16 @@ export default function ChoresList({ loggedInUser }) {
                 {chores.map((chore) => (
                     <div key={chore.id} className="col-md-4 mb-3">
                         <div className="border p-3">
-                            <h5>{chore.name}</h5>
+                            <h5 style={{ color: chore.isOverdue ? "red" : "black" }}>
+                                {chore.name}
+                            </h5>
                             <p>Difficulty: {chore.difficulty}</p>
                             <p>Frequency: Every {chore.choreFrequencyDays} days</p>
+                            {chore.isOverdue && (
+                                <p style={{ color: "red", fontWeight: "bold" }}>
+                                    ⚠️ Overdue!
+                                </p>
+                            )}
                             <button 
                                 className="btn btn-success btn-sm me-2"
                                 onClick={() => handleComplete(chore.id)}
@@ -59,12 +70,20 @@ export default function ChoresList({ loggedInUser }) {
                                 Complete
                             </button>
                             {loggedInUser?.roles?.includes("Admin") && (
-                                <button 
-                                    className="btn btn-danger btn-sm"
-                                    onClick={() => handleDelete(chore.id)}
-                                >
-                                    Delete
-                                </button>
+                                <>
+                                    <Link 
+                                        to={`/chores/${chore.id}`}
+                                        className="btn btn-info btn-sm me-2"
+                                    >
+                                        Details
+                                    </Link>
+                                    <button 
+                                        className="btn btn-danger btn-sm"
+                                        onClick={() => handleDelete(chore.id)}
+                                    >
+                                        Delete
+                                    </button>
+                                </>
                             )}
                         </div>
                     </div>

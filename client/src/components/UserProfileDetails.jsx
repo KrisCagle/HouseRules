@@ -2,36 +2,38 @@ import { useState, useEffect } from "react";
 import { getProfileById } from "../managers/userProfileManager";
 import { useParams } from "react-router-dom";
 
-
-
 export default function UserProfileDetails() {
-    const {id} = useParams();
-    const [details, setDetails] = useState([]);
-    const [loading, setLoading] = useState(true);
+  const { id } = useParams();
+  const [profile, setProfile] = useState(null);  // FIX: null not []
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        getProfileById()
-        .then((data) => {
-            setDetails(data);
-            setLoading(false);
-        })
-        .catch((err) => {
-            console.error("Error fetching details:", err);
-            setLoading(false);
-        });
-    }, []);
+  useEffect(() => {
+    getProfileById(id)  // FIX: add id parameter
+      .then((data) => {
+        setProfile(data);  // FIX: use profile not details
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching details:", err);
+        setLoading(false);
+      });
+  }, [id]);  // FIX: add id to dependency array
 
-    if (loading) return <div> Loading Details...</div>
-    if (!profile) return <div>Profile not found</div>;
+  if (loading) return <div>Loading Details...</div>;
+  if (!profile) return <div>Profile not found</div>;
 
-   return (
+  return (
     <div className="container mt-5">
       <h1>{profile.firstName} {profile.lastName}</h1>
-      
+
       <div className="border p-3 mb-4">
         <h3>Profile Info</h3>
-        <p><strong>Email:</strong> {profile.email}</p>
-        <p><strong>Address:</strong> {profile.address}</p>
+        <p>
+          <strong>Email:</strong> {profile.email}
+        </p>
+        <p>
+          <strong>Address:</strong> {profile.address}
+        </p>
       </div>
 
       <div className="border p-3 mb-4">
@@ -53,7 +55,8 @@ export default function UserProfileDetails() {
           <ul>
             {profile.choreCompletions.map((completion) => (
               <li key={completion.id}>
-                {completion.chore.name} - Completed on {new Date(completion.completedOn).toLocaleDateString()}
+                {completion.chore.name} - Completed on{" "}
+                {new Date(completion.completedOn).toLocaleDateString()}
               </li>
             ))}
           </ul>

@@ -54,7 +54,7 @@ public class UserProfileController : ControllerBase
             return NotFound();
         }
 
-        return Ok(userProfile);
+        return Ok(_mapper.Map<UserProfileDTO>(userProfile));
     }
 
     [HttpGet("withroles")]

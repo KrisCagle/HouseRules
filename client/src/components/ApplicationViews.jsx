@@ -6,7 +6,8 @@ import UserProfileList from "./UserProfileList";
 import UserProfileDetails from "./UserProfileDetails";  // FIX: correct import
 import ChoresList from "./ChoresList";
 import ChoreDetails from "./ChoreDetails";
-import CreateChore from "./CreateChore";  // ADD: import
+import CreateChore from "./CreateChore"; 
+import MyChores from "./MyChores";
 
 export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
   return (
@@ -68,6 +69,14 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
       </Route>
 
       <Route path="*" element={<p>Whoops, nothing here...</p>} />
+      <Route
+  path="/mychores"
+  element={
+    <AuthorizedRoute loggedInUser={loggedInUser}>
+      <MyChores loggedInUser={loggedInUser} />
+    </AuthorizedRoute>
+  }
+/>
     </Routes>
   );
 }

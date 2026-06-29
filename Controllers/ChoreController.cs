@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using HouseRules.Models;
 using HouseRules.Models.DTOs;
 using AutoMapper;
+using System.Security.Claims;
 
 namespace HouseRules.Controllers;
 
@@ -157,4 +158,30 @@ public IActionResult UnassignChore(int id, [FromQuery] int userId)
     _dbContext.SaveChanges();
     return NoContent();
     }
+[HttpGet("assigned")]
+[Authorize]
+public IActionResult GetAssigned()
+{
+    var identityUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var userProfile = _dbContext.UserProfiles
+        .FirstOrDefault(up => up.IdentityUserId == identityUserId);
+
+    if (userProfile == null)
+    {
+        return NotFound();
+    }
+
+    var assignedChores = _dbContext.Chores
+        .Include(c => c.ChoreCompletions)
+        .Include(c => c.ChoreAssignments)
+        .Where(c => c.ChoreAssignments.Any(ca => ca.UserProfileId == userProfile.Id))
+        .Where(c => c.ChoreCompletions == null || c.ChoreCompletions.Count == 0 || 
+                    c.ChoreCompletions.Max(cc => cc.CompletedOn).AddDays(c.ChoreFrequencyDays) < DateTime.Today)
+        .ToList();
+
+    return Ok(_mapper.Map<List<ChoreDto>>(assignedChores));
+}
+
+
+
 }

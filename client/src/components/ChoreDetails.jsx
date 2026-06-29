@@ -1,19 +1,27 @@
 import { useState, useEffect } from "react";
-import { getChoreById } from "../managers/choreManager";
+import { getChoreById, updateChore } from "../managers/choreManager";
 import { getAllProfiles } from "../managers/userProfileManager";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 export default function ChoreDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [chore, setChore] = useState(null);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [name, setName] = useState("");
+  const [difficulty, setDifficulty] = useState(1);
+  const [choreFrequencyDays, setChoreFrequencyDays] = useState(1);
+  const [errors, setErrors] = useState(null);
 
   useEffect(() => {
     Promise.all([getChoreById(id), getAllProfiles()])
       .then(([choreData, usersData]) => {
         setChore(choreData);
         setUsers(usersData);
+        setName(choreData.name);
+        setDifficulty(choreData.difficulty);
+        setChoreFrequencyDays(choreData.choreFrequencyDays);
         setLoading(false);
       })
       .catch((err) => {
@@ -32,13 +40,36 @@ export default function ChoreDetails() {
       credentials: "include",
     })
       .then(() => {
-        // Re-fetch the chore to update assignments
         getChoreById(id).then((updatedChore) => {
           setChore(updatedChore);
         });
       })
       .catch((err) => {
         console.error("Error updating assignment:", err);
+      });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setErrors(null);
+
+    const updatedChore = {
+      name,
+      difficulty: parseInt(difficulty),
+      choreFrequencyDays: parseInt(choreFrequencyDays),
+    };
+
+    updateChore(id, updatedChore)
+      .then((res) => {
+        if (res.errors) {
+          setErrors(res.errors);
+        } else {
+          navigate("/chores");
+        }
+      })
+      .catch((err) => {
+        console.error("Error updating chore:", err);
+        setErrors({ general: ["Failed to update chore"] });
       });
   };
 
@@ -50,17 +81,84 @@ export default function ChoreDetails() {
 
   return (
     <div className="container mt-5">
-      <h1>{chore.name}</h1>
+      <h1>Edit Chore: {chore.name}</h1>
 
-      <div className="border p-3 mb-4">
-        <h3>Chore Details</h3>
-        <p>
-          <strong>Difficulty:</strong> {chore.difficulty}
-        </p>
-        <p>
-          <strong>Frequency:</strong> Every {chore.choreFrequencyDays} days
-        </p>
-      </div>
+      {errors && (
+        <div style={{ color: "red" }}>
+          {Object.keys(errors).map((key) => (
+            <p key={key}>
+              <strong>{key}:</strong> {errors[key].join(", ")}
+            </p>
+          ))}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="mb-4">
+        <div className="mb-3">
+          <label htmlFor="name" className="form-label">
+            Chore Name
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="difficulty" className="form-label">
+            Difficulty (1-5)
+          </label>
+          <input
+            type="number"
+            className="form-control"
+            id="difficulty"
+            min="1"
+            max="5"
+            value={difficulty}
+            onChange={(e) => setDifficulty(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="frequency" className="form-label">
+            Frequency (Days)
+          </label>
+          <input
+            type="number"
+            className="form-control"
+            id="frequency"
+            min="1"
+            max="14"
+            value={choreFrequencyDays}
+            onChange={(e) => setChoreFrequencyDays(e.target.value)}
+            list="frequencySuggestions"
+            required
+          />
+          <datalist id="frequencySuggestions">
+            <option value="1">Daily</option>
+            <option value="3">Every 3 days</option>
+            <option value="7">Weekly</option>
+            <option value="10">Every 10 days</option>
+            <option value="14">Bi-weekly</option>
+          </datalist>
+        </div>
+
+        <button type="submit" className="btn btn-primary me-2">
+          Save Changes
+        </button>
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={() => navigate("/chores")}
+        >
+          Cancel
+        </button>
+      </form>
 
       <div className="border p-3 mb-4">
         <h3>Assign to Users</h3>

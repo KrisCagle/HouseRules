@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getAllProfiles } from "../managers/userProfileManager";
 import { Link } from "react-router-dom";
 
-export default function userProfileList() {
+export default function UserProfileList() {
     const [profiles, setProfiles] =useState([]);
     const [loading, setLoading] =useState(true);
 
