@@ -47,3 +47,9 @@ export const completeChore = (choreId, userId) => {
     credentials: "include",
   });
 };
+
+export const getMyChores = () => {
+  return fetch(`${_apiUrl}/assigned`, {
+    credentials: "include",
+  }).then((res) => res.json());
+};

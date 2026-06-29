@@ -22,5 +22,11 @@ public class AutoMapperProfile : Profile
                        opt => opt.MapFrom(src => src.IdentityUser.Email))
             .ForMember(dest => dest.Roles,
                        opt => opt.Ignore());
+        CreateMap<Chore, ChoreDto>()
+    .ForMember(dto => dto.IsOverdue, opt => opt.MapFrom(src => src.IsOverdue));
     }
+
+
+
+
 }
