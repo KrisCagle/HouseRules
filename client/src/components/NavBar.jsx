@@ -1,58 +1,75 @@
-import { useState } from "react";
-import { NavLink as RRNavLink } from "react-router-dom";
-import {
-Button,
-Collapse,
-Nav,
-NavLink,
-NavItem,
-Navbar,
-NavbarBrand,
-NavbarToggler,
-} from "reactstrap";
-
+import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../managers/authManager";
 
 export default function NavBar({ loggedInUser, setLoggedInUser }) {
-const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
-const toggleNavbar = () => setOpen(!open);
+  const handleLogout = () => {
+    logout().then(() => {
+      setLoggedInUser(null);
+      navigate("/login");
+    });
+  };
 
-return (
-    <div>
-    <Navbar color="light" light fixed="true" expand="lg">
-        <NavbarBrand className="mr-auto" tag={RRNavLink} to="/">
-        🧹🧼House Rules
-        </NavbarBrand>
-        {loggedInUser ? (
-        <>
-            <NavbarToggler onClick={toggleNavbar} />
-            <Collapse isOpen={open} navbar>
-            <Nav navbar></Nav>
-            </Collapse>
-            <Button
-            color="primary"
-            onClick={(e) => {
-                e.preventDefault();
-                setOpen(false);
-                logout().then(() => {
-                setLoggedInUser(null);
-                setOpen(false);
-                });
-            }}
-            >
-            Logout
-            </Button>
-        </>
-        ) : (
-        <Nav navbar>
-            <NavItem>
-            <NavLink tag={RRNavLink} to="/login">
-                <Button color="primary">Login</Button>
-            </NavLink>
-            </NavItem>
-        </Nav>
-        )}
-    </Navbar>
-    </div>
-);
+  return (
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div className="container-fluid">
+        <Link className="navbar-brand" to="/">
+          House Rules
+        </Link>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav ms-auto">
+            {loggedInUser ? (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/chores">
+                    Chores
+                  </Link>
+                </li>
+                {loggedInUser?.roles?.includes("Admin") && (
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/userprofiles">
+                      Users
+                    </Link>
+                  </li>
+                )}
+                <li className="nav-item">
+                  <span className="nav-link">
+                    Welcome, {loggedInUser.firstName}!
+                  </span>
+                </li>
+                <li className="nav-item">
+                  <button
+                    className="nav-link btn btn-link"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/login">
+                    Login
+                  </Link>
+                </li>
+              </>
+            )}
+          </ul>
+        </div>
+      </div>
+    </nav>
+  );
 }
